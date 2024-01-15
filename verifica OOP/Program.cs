@@ -11,7 +11,23 @@ namespace verifica_OOP
 {
     class Persona
     {
+        protected string provincia;
         protected string nome;
+        public string Provincia
+        {
+            get { return provincia; }
+            set
+            {
+                if (value.Length == 2)
+                {
+                    provincia = value;
+                }
+                else
+                {
+                    provincia = "";
+                }
+            }
+        }
         public string Nome
         {
             get { return nome; }
@@ -31,6 +47,7 @@ namespace verifica_OOP
         public Persona()
         {
             nome = "";
+            provincia = "";
         }
     }
     class Conto : Persona
@@ -48,18 +65,15 @@ namespace verifica_OOP
             get { return chius; }
             set { chius = value; }
         }
-
         public Conto()
         {
             euro = 0;
             chius = true;
         }
-
         public void Apri()
         {
             chius = false;
         }
-
         public void Chiusura()
         {
             chius = true;
@@ -96,7 +110,7 @@ namespace verifica_OOP
             {
                 a = "Aperto";
             }
-            return $"Nome:{nome}\nSaldo:{euro}\nStato:{a}";
+            return $"Nome:{nome}\nProvincia:{provincia}\nSaldo:{euro}\nStato:{a}";
         }
     }
 
@@ -133,13 +147,14 @@ namespace verifica_OOP
             }
             return -1;
         }
-        public void ApriConto(string a)
+        public void ApriConto(string a, string b)
         {
             int i = CercaConto();
             if(i != -1)
             {
                 array[i].Apri();
                 array[i].Nome = a;
+                array[i].Provincia = b;
             }
             else
             {
@@ -178,6 +193,20 @@ namespace verifica_OOP
         {
             return array[i].Chiuso();
         }
+        public float SaldoContiProvincia(string b)
+        {
+            float a = 0;
+
+            for(int i = 0; i < array.Length; i++)
+            {
+                if (array[i].Provincia == b)
+                {
+                    a += array[i].Saldo();
+                }
+            }
+
+            return a;
+        }
     }
     internal class Program
     {
@@ -189,18 +218,21 @@ namespace verifica_OOP
             while(Uscita1 == false)
             {
                 Console.WriteLine("Benvenuto User, nella Banca Internazionare Intercontinentale, Cosa vuoi fare?");
-                Console.WriteLine("\tQualsiasi altro tasto) Chiudi programma.\n\t1) Aprire un nuovo conto.\n\t2) Gestire un conto già esistente.");
+                Console.WriteLine("\tQualsiasi altro tasto) Chiudi programma.\n\t1) Aprire un nuovo conto.\n\t2) Gestire un conto già esistente.\n\t3) Informazioni generiche sui conti in banca");
                 switch(Console.ReadLine())
                 { 
                     case "1":
                         Console.Clear();
                         Console.WriteLine("Inserisci il nome del titolare del nuovo conto.");
-                        banca.ApriConto(Console.ReadLine());
+                        string a, b;
+                        a = Console.ReadLine();
+                        Console.WriteLine("Inserisci la provincia del conto.");
+                        b = Console.ReadLine();
+                        banca.ApriConto(a,b);
                         Console.Clear();
                         break;
                     case "2":
                         int i = -1;
-                        bool Uscita2 = false;
 
                         // Inserimento nome per ricerca conto + controllo
                         Console.Clear();
@@ -216,6 +248,7 @@ namespace verifica_OOP
                             }
                         }
                         Console.Clear();
+                        bool Uscita2 = false;
 
                         // Secondo menù per scelta azioni conto
                         while (Uscita2 == false)
@@ -266,18 +299,18 @@ namespace verifica_OOP
                                     {
                                         if (banca.VediSaldoConto(i) != 0)
                                         {
-                                            float a = 0;
+                                            float al = 0;
                                             Console.WriteLine("Quanto vuoi prelevare?");
-                                            a = float.Parse(Console.ReadLine());
-                                            while (a > banca.VediSaldoConto(i))
+                                            al = float.Parse(Console.ReadLine());
+                                            while (al > banca.VediSaldoConto(i))
                                             {
-                                                if (a > banca.VediSaldoConto(i))
+                                                if (al > banca.VediSaldoConto(i))
                                                 {
                                                     Console.WriteLine("i soldi da prelevare superano i soldi sul conto, rinserisci la quantità da prelevare e riprova.");
-                                                    a = float.Parse(Console.ReadLine());
+                                                    al = float.Parse(Console.ReadLine());
                                                 }
                                             }
-                                            banca.PrelevaConto(i, a);
+                                            banca.PrelevaConto(i, al);
                                         }
                                         else
                                         {
@@ -304,6 +337,26 @@ namespace verifica_OOP
                                     break;
                                 default:
                                     Uscita2 = true;
+                                    break;
+                            }
+                        }
+                        Console.Clear();
+                        break;
+                    case "3":
+                        Console.Clear();
+                        Console.WriteLine("\tQualsiasi altro tasto) Torna al menù precedente.\n\t1) Ammontare dei saldi in una provincia.");
+                        bool Uscita3 = false;
+                        while (Uscita3 == false)
+                        {
+                            switch(Console.ReadLine())
+                            {
+                                case "1":
+                                    Console.WriteLine("inserisci la provincia (2 lettere).");
+                                    Console.WriteLine($"Saldo totale dei conti della provincia: {banca.SaldoContiProvincia(Console.ReadLine())} (invio per andare avanti)");
+                                    Console.ReadLine();
+                                    break;
+                                default:
+                                    Uscita3 = true;
                                     break;
                             }
                         }
