@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Policy;
 using System.Text;
@@ -24,7 +25,7 @@ namespace verifica_OOP
                 }
                 else
                 {
-                    provincia = "";
+                    provincia = "Sconosciuta";
                 }
             }
         }
@@ -42,6 +43,10 @@ namespace verifica_OOP
                     nome = "Sconosciuto";
                 }
             }
+        }
+        public string Info()
+        {
+            return $"Nome: {nome}\nProvincia: {provincia}";
         }
 
         public Persona()
@@ -111,6 +116,21 @@ namespace verifica_OOP
                 a = "Aperto";
             }
             return $"Nome:{nome}\nProvincia:{provincia}\nSaldo:{euro}\nStato:{a}";
+        }
+
+        public new string Info()
+        {
+            string a;
+            if (chius == true)
+            {
+                a = "Chiuso";
+            }
+            else
+            {
+                a = "Aperto";
+            }
+
+            return $"{base.Info()}\nSaldo:{euro}\nStato:{a}";
         }
     }
 
@@ -184,6 +204,19 @@ namespace verifica_OOP
         public string GetInfoConto(int i)
         {
             return array[i].Get_Info();
+        }
+        public string Info()
+        {
+            string a = "";
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].Nome != "")
+                {
+                    a += array[i].Info();
+                    a += "\n";
+                }
+            }
+            return a;
         }
         public string NomeConto(int i)
         {
@@ -344,7 +377,7 @@ namespace verifica_OOP
                         break;
                     case "3":
                         Console.Clear();
-                        Console.WriteLine("\tQualsiasi altro tasto) Torna al menù precedente.\n\t1) Ammontare dei saldi in una provincia.");
+                        Console.WriteLine("\tQualsiasi altro tasto) Torna al menù precedente.\n\t1) Ammontare dei saldi in una provincia.\n\t2) Tutte info dei conti");
                         bool Uscita3 = false;
                         while (Uscita3 == false)
                         {
@@ -354,6 +387,9 @@ namespace verifica_OOP
                                     Console.WriteLine("inserisci la provincia (2 lettere).");
                                     Console.WriteLine($"Saldo totale dei conti della provincia: {banca.SaldoContiProvincia(Console.ReadLine())} (invio per andare avanti)");
                                     Console.ReadLine();
+                                    break;
+                                case "2":
+                                    Console.WriteLine(banca.Info());
                                     break;
                                 default:
                                     Uscita3 = true;
