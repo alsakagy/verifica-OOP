@@ -136,50 +136,25 @@ namespace verifica_OOP
 
     class Banca
     {
-        private Conto[] array = new Conto[10];
+        List<Conto> array = new List<Conto>();
 
-        public Banca()
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                array[i] = new Conto();
-            }
-        }
-        public int CercaConto()
-        {
-            for(int i = 0; i < array.Length; i++)
-            {
-                if (array[i].Nome == "")
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
         public int CercaConto(string a)
         {
-            for (int i = 0; i < array.Length; i++)
+            foreach(Conto conto in array)
             {
-                if (array[i].Nome == a)
+                if (conto.Nome == a)
                 {
-                    return i;
+                    return array.IndexOf(conto);
                 }
             }
             return -1;
         }
         public void ApriConto(string a, string b)
         {
-            int i = CercaConto();
-            if(i != -1)
-            {
-                array[i].Apri();
-                array[i].Nome = a;
-                array[i].Provincia = b;
-            }
-            else
-            {
-                Console.WriteLine("ATTENZIONE spazio per conti finito, ELIMINA un conto per poter aprirne un altro.");
-            }
+            array.Add(new Conto());
+            array[array.Count - 1].Apri();
+            array[array.Count - 1].Nome = a;
+            array[array.Count - 1].Provincia = b;
         }
         public void ApriConto(int i)
         {
@@ -208,11 +183,11 @@ namespace verifica_OOP
         public string Info()
         {
             string a = "";
-            for (int i = 0; i < array.Length; i++)
+            foreach(Conto conto in array)
             {
-                if (array[i].Nome != "")
+                if (conto.Nome != "")
                 {
-                    a += array[i].Info();
+                    a += conto.Info();
                     a += "\n";
                 }
             }
@@ -229,15 +204,13 @@ namespace verifica_OOP
         public float SaldoContiProvincia(string b)
         {
             float a = 0;
-
-            for(int i = 0; i < array.Length; i++)
+            foreach(Conto conto in array)
             {
-                if (array[i].Provincia == b)
+                if (conto.Provincia == b)
                 {
-                    a += array[i].Saldo();
+                    a += conto.Saldo();
                 }
             }
-
             return a;
         }
     }
